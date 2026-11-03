@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khám Phá Các Nguyên Tố Hóa Học</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --text: #f8fafc;
+      --subtext: #94a3b8;
+      --accent: #38bdf8;
+      --border: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+      text-align: center;
+    }
+
+    p.subtitle {
+      color: var(--subtext);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 2rem;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.8rem 1.2rem;
+      border-radius: 25px;
+      border: 1px solid var(--border);
+      background-color: var(--panel);
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .card {
+      background-color: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(56, 189, 248, 0.2);
+      border-color: var(--accent);
+    }
+
+    .number {
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      font-size: 0.75rem;
+      color: var(--subtext);
+    }
+
+    .symbol {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin: 0.3rem 0;
+    }
+
+    .name {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .mass {
+      font-size: 0.75rem;
+      color: var(--subtext);
+      margin-top: 4px;
+    }
+
+    .category {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 2px 8px;
+      font-size: 0.7rem;
+      border-radius: 10px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Hóa Học Cơ Bản</h1>
+  <p class="subtitle">Tra cứu nhanh một số nguyên tố hóa học phổ biến</p>
+
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Tìm theo tên hoặc ký hiệu (ví dụ: Fe, Oxy)...">
+  </div>
+
+  <div class="grid" id="elementGrid"></div>
+
+  <script>
+    const elements = [
+      { number: 1, symbol: "H", name: "Hydro", mass: "1.008", category: "Phi kim" },
+      { number: 2, symbol: "He", name: "Heli", mass: "4.0026", category: "Khí hiếm" },
+      { number: 6, symbol: "C", name: "Cacbon", mass: "12.011", category: "Phi kim" },
+      { number: 7, symbol: "N", name: "Nitơ", mass: "14.007", category: "Phi kim" },
+      { number: 8, symbol: "O", name: "Oxy", mass: "15.999", category: "Phi kim" },
+      { number: 11, symbol: "Na", name: "Natri", mass: "22.990", category: "Kim loại kiềm" },
+      { number: 12, symbol: "Mg", name: "Magie", mass: "24.305", category: "Kim loại kiềm thổ" },
+      { number: 13, symbol: "Al", name: "Nhôm", mass: "26.982", category: "Kim loại" },
+      { number: 17, symbol: "Cl", name: "Clo", mass: "35.45", category: "Halogen" },
+      { number: 26, symbol: "Fe", name: "Sắt", mass: "55.845", category: "Kim loại chuyển tiếp" },
+      { number: 29, symbol: "Cu", name: "Đồng", mass: "63.546", category: "Kim loại chuyển tiếp" },
+      { number: 79, symbol: "Au", name: "Vàng", mass: "196.97", category: "Kim loại chuyển tiếp" }
+    ];
+
+    const grid = document.getElementById("elementGrid");
+    const searchInput = document.getElementById("searchInput");
+
+    function renderElements(items) {
+      grid.innerHTML = "";
+      items.forEach(el => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <span class="number">${el.number}</span>
+          <div class="symbol">${el.symbol}</div>
+          <div class="name">${el.name}</div>
+          <div class="mass">${el.mass} u</div>
+          <span class="category">${el.category}</span>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    searchInput.addEventListener("input", (e) => {
+      const keyword = e.target.value.toLowerCase().trim();
+      const filtered = elements.filter(el => 
+        el.name.toLowerCase().includes(keyword) || 
+        el.symbol.toLowerCase().includes(keyword) ||
+        el.number.toString() === keyword
+      );
+      renderElements(filtered);
+    });
+
+    renderElements(elements);
+  </script>
+
+</body>
+</html>
